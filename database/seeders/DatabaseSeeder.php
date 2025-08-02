@@ -16,8 +16,26 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('admin123'), // Ensure to hash the password
+            'role_id' => 1, // Assign a role ID, assuming 'admin' is the first role
         ]);
+
+        User::factory()->create([
+            'name' => 'student',
+            'email' => 'student@gmail.com',
+            'password' => bcrypt('student123'), // Ensure to hash the password
+            'role_id' => 2, // Assign a role ID, assuming 'student' is the second role
+        ]);
+
+        User::factory()->create([
+            'name' => 'public',
+            'email' => 'public@gmail.com',
+            'password' => bcrypt('public123'), // Ensure to hash the password
+            'role_id' => 3, // Assign a role ID, assuming 'public' is the third role
+        ]);
+
+        $this->call(RoleSeeder::class);
     }
 }
