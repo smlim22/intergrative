@@ -1,9 +1,9 @@
 # README IMPORTANT
 <p>If you just cloned the repository, make sure to run the following commands to set up everything:</p>
-1. npm install
-2. composer install
-3. php artisan migrate
-4. php artisan db:seed
+<p>1. npm install</p>
+<p>2. composer install</p>
+<p>3. php artisan migrate</p>
+<p>4. php artisan db:seed</p>
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
