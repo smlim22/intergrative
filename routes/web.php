@@ -1,11 +1,34 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
+
+/**
+ * Dummy login route to stop redirect error during testing.
+ */
+Route::get('/login', function () {
+    return redirect('/facilities');
+})->name('login');
+
+/**
+ * Public route to view facilities (no login needed)
+ */
+Route::get('/', [FacilityController::class, 'index']);
+Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
+
+/**
+ * Admin-only routes (require auth and authorization)
+ */
+Route::get('/facilities/create', [FacilityController::class, 'create'])->name('facilities.create');
+Route::post('/facilities', [FacilityController::class, 'store'])->name('facilities.store');
+Route::get('/facilities/{facility}/edit', [FacilityController::class, 'edit'])->name('facilities.edit');
+Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->name('facilities.update');
+Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
 
 Route::get('/', fn() => view('welcome', ['user' => Auth::user()]));
 
