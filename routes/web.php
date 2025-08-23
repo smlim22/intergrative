@@ -7,6 +7,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PayPalController;
+
+Route::get('/checkout', [PayPalController::class, 'checkout'])->name('checkout');
+Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
+Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
+
 
 /**
  * Dummy login route to stop redirect error during testing.

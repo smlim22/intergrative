@@ -4,6 +4,20 @@
 <p>2. composer install</p>
 <p>3. php artisan migrate</p>
 <p>4. php artisan db:seed</p>
+---
+
+### PayPal / Twilio Setup
+
+Install the dependencies:
+
+```bash
+composer require paypal/paypal-server-sdk
+composer require twilio/sdk
+| Role     | Email                                         | Password |
+|----------|-----------------------------------------------|----------|
+| Normal   | sb-tu44634856447@personal.example.com         | i)<RA50J |
+| Business | sb-plqhw43610412@business.example.com         | bMV05M^A |
+```
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
