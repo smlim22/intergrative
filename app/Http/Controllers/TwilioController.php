@@ -8,6 +8,11 @@ use App\Services\TwilioService;
 class TwilioController extends Controller
 {
     protected $twilio;
+    public function testForm()
+{
+    return view('whatsappTest'); // the blade file you'll create
+}
+
 
     public function __construct(TwilioService $twilio)
     {
@@ -21,16 +26,12 @@ class TwilioController extends Controller
             'body' => 'required|string',
         ]);
 
-        $message = $this->twilio->sendWhatsAppMessage(
-            $request->to,
-            $request->body,
-            $request->input('contentSid'),
-            $request->input('variables', [])
-        );
+        try {
+            $message = $this->twilio->sendWhatsAppMessage($request->to, $request->body);
 
-        return response()->json([
-            'status' => 'success',
-            'sid' => $message->sid,
-        ]);
+            return back()->with('success', "Message sent! SID: {$message->sid}");
+        } catch (\Exception $e) {
+            return back()->with('error', "Failed to send: " . $e->getMessage());
+        }
     }
 }
