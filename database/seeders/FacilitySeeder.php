@@ -27,18 +27,57 @@ class FacilitySeeder extends Seeder
         'hourly_rate' => 80.00,
     ]);
     Facility::create([
-        'name' => 'Swimming Pool',
+        'name' => 'Badminton(Hall 1 Court VIP)',
+        'category' => 'Rooftop Sports Arena',
+        'description' => 'Has a high ceiling to accommodate the shuttlecocks trajectory, and a sprung wooden floor to reduce the impact on players joints. The court dimensions are clearly marked with white or yellow lines, and there are nets positioned at the center. The lighting is non-glare and designed to iluminate the court evenly.',
+        'hourly_rate' => 26.00,
+    ]);
+    Facility::create([
+        'name' => 'Badminton(Hall 2, 3 Courts)',
+        'category' => 'Rooftop Sports Arena',
+        'description' => 'Has a high ceiling to accommodate the shuttlecocks trajectory, and a sprung wooden floor to reduce the impact on players joints. The court dimensions are clearly marked with white or yellow lines, and there are nets positioned at the center. The lighting is non-glare and designed to iluminate the court evenly.',
+        'hourly_rate' => 23.00,
+    ]);
+    Facility::create([
+        'name' => 'Futsal/Netball',
+        'category' => 'Rooftop Sports Arena',
+        'description' => 'The surface is usually a hard court made of synthetic material or polished concrete, whihc is durable and provides good grip. The court has a rectangular layout with marked lines for both sports, including penalty areas and goal circles. For futsal, there are two goals at opposite ends, while for netball features goal posts without backboards.',
+        'hourly_rate' => 100.00,
+    ]);
+    Facility::create([
+        'name' => 'Swimming Pool (30 People Max)',
         'category' => 'Rooftop Sports Arena',
         'description' => 'Olympic-size swimming pool with crystal clear water, proper filtration system, and safety equipment. Suitable for swimming lessons, lap swimming, and pool parties.',
         'half_day_rate' => 200.00,
         'full_day_rate' => 400.00,
     ]);
     Facility::create([
+        'name' => 'Multipurpose Hall (980 sq metre)',
+        'category' => 'Halls & Rooms',
+        'description' => 'Has a large, flexible space used for a wide range of activities. It can host large events like conferences, exhibitions, banquets, and performances. The hall often has features such as a stage, sound system, and movable seating to adapt to different functions. Its large size and open layout make it suitable for community gatherings, large-scale sports, or as an examination venue.',
+        'half_day_rate' => 2500.00,
+        'full_day_rate' => 4000.00,
+    ]);
+    Facility::create([
+        'name' => 'Lecture Hall (128 sq metre)',
+        'category' => 'Halls & Rooms',
+        'description' => 'Is an academic space designed for teaching large groups of students. It can accommodate a significant number of people. The seating is typically tiered or sloped to provide a clear view of the lecturer and the projection screen or whiteboard at the front. The room is equipped with audio-visual technology, including projectors and sound systems to support presentations.',
+        'half_day_rate' => 400.00,
+        'full_day_rate' => 600.00,
+    ]);
+    Facility::create([
+        'name' => 'Tutorial Room (64 sq metre)',
+        'category' => 'Halls & Rooms',
+        'description' => 'Is a smaller academic space designed for teaching smaller groups of students. It can accommodate a limited number of people. The seating is typically arranged to facilitate discussion and interaction. The room is equipped with basic audio-visual technology to support presentations.',
+        'half_day_rate' => 200.00,
+        'full_day_rate' => 400.00,
+    ]);
+    Facility::create([
         'name' => 'PA System',
-        'category' => 'Audio Equipment',
+        'category' => 'Halls & Rooms',
         'description' => 'Professional public address system with microphones, speakers, and amplifiers. Perfect for events, presentations, and announcements.',
         'per_use_rate' => 200.00,
     ]);
-    // Add more as needed
+    
 }
 }
