@@ -36,6 +36,8 @@ Route::get('/facilities/{facility}/edit', [FacilityController::class, 'edit'])->
 Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->name('facilities.update');
 Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
 
+Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
+
 Route::get('/', fn() => view('welcome', ['user' => Auth::user()]));
 
 Route::get('/register', [AccountController::class, 'showRegister'])->name('register');
