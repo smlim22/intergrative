@@ -19,7 +19,6 @@ class AccountController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'status' => 'required|in:Active,Inactive',
         ]);
 
         $user = User::create([
@@ -27,13 +26,14 @@ class AccountController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => 3, //Default value for public user
-            'status' => $request->status,
+            'status' => $request->status ?? 'Active',
         ]);
 
         Auth::login($user);
 
-        return redirect('/admin');
+        return redirect('/');
     }
+
     public function showLogin()
     {
         return view('/login');
