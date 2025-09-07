@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => bcrypt('admin123'), // Ensure to hash the password
             'role_id' => 1, // Assign a role ID, assuming 'admin' is the first role
+            'status' => 'active',
         ]);
 
         User::factory()->create([
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'student@gmail.com',
             'password' => bcrypt('student123'), // Ensure to hash the password
             'role_id' => 2, // Assign a role ID, assuming 'student' is the second role
+            'status' => 'active',
         ]);
 
         User::factory()->create([
@@ -33,8 +35,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'public@gmail.com',
             'password' => bcrypt('public123'), // Ensure to hash the password
             'role_id' => 3, // Assign a role ID, assuming 'public' is the third role
+            'status' => 'active',
         ]);
 
         $this->call(RoleSeeder::class);
+        $this->call(FacilitySeeder::class);
     }
 }
