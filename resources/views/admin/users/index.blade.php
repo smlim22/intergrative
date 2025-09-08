@@ -12,8 +12,8 @@
                 <input type="text" class="form-control me-2" name="search" placeholder="Search Users" style="width: 250px;">
                 <select name="role" class="form-select me-2" style="width: 150px;">
                     <option value="">All Roles</option>
-                    @foreach ($users as $user)
-                        <option value="{{ $user->role_id }}">{{ $user->role->name }}</option>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
                 </select>
                 <button type="submit" class="btn btn-primary">Search</button>
