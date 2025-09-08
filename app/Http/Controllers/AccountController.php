@@ -19,7 +19,7 @@ class AccountController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            'phone_number' => 'required|string|max:15',
+            'phone_number' => 'required|string|min:10|max:11',
         ]);
 
         $user = User::create([
@@ -29,6 +29,7 @@ class AccountController extends Controller
             'role_id' => 3, //Default value for public user
             'status' => $request->status ?? 'Active',
             'student_id' => null,
+            'phone_number' => $request->phone_number,
         ]);
 
         Auth::login($user);

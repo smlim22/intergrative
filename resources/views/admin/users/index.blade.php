@@ -50,17 +50,22 @@
                             <td>{{ $user->status }}</td>
                             <td>
                                 <div class="btn-group" role="group">
+                                    <form method="GET" action="{{ route('admin.users.view', $user->id) }}">
+                                        <button type="submit" class="btn btn-sm btn-primary text-white">
+                                            View
+                                        </button>
+                                    </form>
                                     @if($user->status === 'Active')
                                         <form method="POST" action="{{ route('admin.users.deactivate', $user->id) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                            <button type="submit" class="btn btn-sm btn-danger ms-2">
                                                 Deactivate
                                             </button>
                                         </form>
                                     @else
                                         <form method="POST" action="{{ route('admin.users.activate', $user->id) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-success">
+                                            <button type="submit" class="btn btn-sm btn-success ms-2">
                                                 Activate
                                             </button>
                                         </form>

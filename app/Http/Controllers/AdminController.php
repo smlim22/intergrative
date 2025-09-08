@@ -32,4 +32,8 @@ class AdminController extends Controller
         return view('admin.users.index', compact('users', 'roles'));
     }
 
+    public function viewUser(User $user) {
+        return view('admin.users.view', compact('user'));
+    }
+
 }

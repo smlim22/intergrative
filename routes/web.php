@@ -40,8 +40,9 @@ Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->nam
 Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
-Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate');
-Route::post('/admin/users/{user}/deactivate', [AccountController::class, 'deactivate'])->name('admin.users.deactivate');
+Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate')->middleware(['auth', 'role:admin']);
+Route::post('/admin/users/{user}/deactivate', [AccountController::class, 'deactivate'])->name('admin.users.deactivate')->middleware(['auth', 'role:admin']);
+Route::get('/admin/users/{user}', [AdminController::class, 'viewUser'])->name('admin.users.view')->middleware(['auth', 'role:admin']);
 
 Route::get('/', fn() => view('welcome', ['user' => Auth::user()]));
 
