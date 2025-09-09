@@ -30,11 +30,11 @@ Route::get('/facilities', [FacilityController::class, 'index'])->name('facilitie
 /**
  * Admin-only routes (require auth and authorization)
  */
-Route::get('/facilities/create', [FacilityController::class, 'create'])->name('facilities.create');
-Route::post('/facilities', [FacilityController::class, 'store'])->name('facilities.store');
-Route::get('/facilities/{facility}/edit', [FacilityController::class, 'edit'])->name('facilities.edit');
-Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->name('facilities.update');
-Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
+Route::get('/facilities/create', [FacilityController::class, 'create'])->name('facilities.create')->middleware(['auth', 'role:admin']);
+Route::post('/facilities', [FacilityController::class, 'store'])->name('facilities.store')->middleware(['auth', 'role:admin']);
+Route::get('/facilities/{facility}/edit', [FacilityController::class, 'edit'])->name('facilities.edit')->middleware(['auth', 'role:admin']);
+Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->name('facilities.update')->middleware(['auth', 'role:admin']);
+Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy')->middleware(['auth', 'role:admin']);
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
 
