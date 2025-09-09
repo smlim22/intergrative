@@ -57,9 +57,10 @@ Route::post('/register', [AccountController::class, 'register']);
 Route::get('/login', [AccountController::class, 'showLogin'])->name('login');
 Route::post('/login', [AccountController::class, 'login']);
 
-Route::get('reset-password/{token}', [AccountController::class, 'showResetForm'])->name('password.reset');
-Route::post('reset-password', [AccountController::class, 'resetPassword'])->name('password.update');
-Route::post('/forgot-password', [AccountController::class, 'forgotPassword'])->name('forgot-password'); 
+Route::get('/reset-password/{token}', [AccountController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AccountController::class, 'resetPassword'])->name('password.update');
+
+Route::post('/forgot-password', [AccountController::class, 'sendResetLinkEmail'])->name('password.email'); 
 Route::get('/forgot-password', function () {
     return view('forgot-password');
 })->name('forgot-password');

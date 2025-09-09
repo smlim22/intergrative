@@ -10,6 +10,13 @@
             <div class="col-md-5">
                 <div class="card shadow-lg p-4 rounded-3">
                     <h2 class="text-center mb-4">Login</h2>
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            @foreach ($errors->all() as $error)
+                                {{ $error }}
+                            @endforeach
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">
