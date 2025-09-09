@@ -46,6 +46,10 @@ Route::post('/facilities', [FacilityController::class, 'store'])->name('faciliti
 Route::get('/facilities/{facility}/edit', [FacilityController::class, 'edit'])->name('facilities.edit')->middleware(['auth', 'role:admin']);
 Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->name('facilities.update')->middleware(['auth', 'role:admin']);
 Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy')->middleware(['auth', 'role:admin']);
+// Feedback routes
+Route::get('/facilities/{facility}/feedback', [App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
+Route::get('/facilities/{facility}/feedback/create', [App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/facilities/{facility}/feedback', [App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
 Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate')->middleware(['auth', 'role:admin']);

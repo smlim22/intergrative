@@ -73,6 +73,7 @@
                             <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                         </form>
                     </div>
+                            <a href="{{ url('/facilities/' . $facility->id . '/feedback') }}" class="btn btn-info btn-sm mt-1">Reviews & Ratings</a>
                 </td>
             </tr>
         @endforeach
