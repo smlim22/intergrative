@@ -20,7 +20,11 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
-                    <div class="text-center mt-3">
+                    <hr>
+                    <div class="text-center mb-3">
+                        <a href="{{ route('forgot-password') }}">Forgot Your Password?</a>
+                    </div>
+                    <div class="text-center">
                         <a href="{{ route('register') }}">Don't have an account? Register here</a>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class User extends Authenticatable
 {
@@ -53,5 +54,15 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+        protected static function boot()
+    {
+        parent::boot();
+
+        // Customize the reset link
+        ResetPassword::createUrlUsing(function ($notifiable, $token) {
+            return url('/reset-password?token=' . $token . '&email=' . urlencode($notifiable->email));
+        });
     }
 }
