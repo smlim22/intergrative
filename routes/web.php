@@ -14,6 +14,11 @@ Route::get('/checkout', [PayPalController::class, 'checkout'])->name('checkout')
 Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
 Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
 Route::get('/whatsappTest', [TwilioController::class, 'testForm'])->name('whatsapp.test');
+// WhatsApp Text
+Route::post('/whatsapp/send', [TwilioController::class, 'sendWhatsApp'])->name('whatsapp.send');
+
+// WhatsApp Invoice PDF
+Route::post('/whatsapp/invoice', [TwilioController::class, 'sendInvoicePdf'])->name('whatsapp.invoice');
 
 
 

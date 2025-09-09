@@ -31,4 +31,24 @@ class TwilioService
 
         return $this->twilio->messages->create($to, $data);
     }
+
+    //MODIFY THIS
+    public function sendInvoicePdf($to)
+{
+    $to = str_starts_with($to, 'whatsapp:') ? $to : "whatsapp:$to";
+
+    // Google Drive direct download link
+    $pdfUrl = "https://drive.google.com/uc?export=download&id=16STnq-IMn4nbdrJi9laaiVrMk_LU0MM-";
+
+    return $this->twilio->messages->create(
+        $to,
+        [
+            "from" => config('services.twilio.whatsapp_from'),
+            "body" => "Here is your invoice 📄",
+            "mediaUrl" => [$pdfUrl],
+        ]
+    );
+}
+
+    
 }
