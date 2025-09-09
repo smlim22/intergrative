@@ -80,8 +80,8 @@ class FeedbackController extends Controller
                 'comment' => null,
             ];
         }
-        Feedback::create($data);
-        return redirect()->back()->with('success', 'Thank you for your feedback!');
+    Feedback::create($data);
+    return redirect()->route('feedback.show', $facility->id)->with('success', 'Thank you for your feedback!');
     }
 
     // Display feedback for a facility
