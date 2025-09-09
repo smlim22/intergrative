@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleSeeder::class);
+        $this->call(FacilitySeeder::class);
 
         User::factory()->create([
             'name' => 'admin',
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('student123'), // Ensure to hash the password
             'role_id' => 2, // Assign a role ID, assuming 'student' is the second role
             'status' => 'active',
+            'student_id' => '22SBR12345', // Example student ID
         ]);
 
         User::factory()->create([
@@ -37,8 +39,5 @@ class DatabaseSeeder extends Seeder
             'role_id' => 3, // Assign a role ID, assuming 'public' is the third role
             'status' => 'active',
         ]);
-
-        $this->call(RoleSeeder::class);
-        $this->call(FacilitySeeder::class);
     }
 }

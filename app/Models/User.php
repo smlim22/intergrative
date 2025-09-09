@@ -55,14 +55,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-
-        protected static function boot()
-    {
-        parent::boot();
-
-        // Customize the reset link
-        ResetPassword::createUrlUsing(function ($notifiable, $token) {
-            return url('/reset-password?token=' . $token . '&email=' . urlencode($notifiable->email));
-        });
-    }
 }

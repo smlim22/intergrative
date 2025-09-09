@@ -10,7 +10,8 @@
                 <div class="card shadow-lg p-4 rounded-3">
                     <h2 class="text-center mb-4">Reset Password</h2>
                     
-                    <form id="forgotPasswordForm">
+                    <form id="forgotPasswordForm" method="POST" action="{{ route('forgot-password') }}">
+                        @csrf
                         <input type="email" id="email" name="email"
                             class="mt-1 p-2 w-full border rounded-lg"
                             placeholder="Enter your email"
@@ -22,7 +23,19 @@
                         </button>
                     </form>
 
-                    <div id="responseMessage" class="mt-4 hidden"></div>
+                    @if (session('status'))
+                        <div class="alert alert-success mt-2">{{ session('status') }}</div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger mt-2">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <hr>
 
@@ -34,32 +47,3 @@
         </div>
     </div>
 </body>
-
-<script>
-    document.getElementById('forgotPasswordForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const email = document.getElementById('email').value;
-
-        const response = await fetch("/api/forgot-password", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({ email })
-        });
-
-        const data = await response.json();
-        const messageBox = document.getElementById("responseMessage");
-
-        messageBox.classList.remove("hidden");
-        messageBox.textContent = data.message;
-
-        if (response.ok) {
-            messageBox.className = "mt-4 p-2 rounded bg-green-100 text-green-700";
-        } else {
-            messageBox.className = "mt-4 p-2 rounded bg-red-100 text-red-700";
-        }
-    });
-</script>
