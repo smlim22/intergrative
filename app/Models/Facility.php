@@ -10,7 +10,13 @@ class Facility extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'category', 'description',
-        'hourly_rate', 'half_day_rate', 'full_day_rate', 'per_use_rate'
+        'name',
+        'category', 
+        'description',
+        'capacity',
+        'hourly_rate',
+        'half_day_rate',
+        'full_day_rate',
+        'per_use_rate'
     ];
 }

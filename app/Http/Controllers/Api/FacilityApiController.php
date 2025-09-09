@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -27,17 +26,26 @@ class FacilityApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'hourly_rate' => 'nullable|numeric',
-            'half_day_rate' => 'nullable|numeric',
-            'full_day_rate' => 'nullable|numeric',
-            'capacity' => 'nullable|integer',
+            'description' => 'nullable|string|max:1000',
+            'capacity' => 'nullable|integer|min:1',
+            'hourly_rate' => 'nullable|numeric|min:0',
+            'half_day_rate' => 'nullable|numeric|min:0',
+            'full_day_rate' => 'nullable|numeric|min:0',
+            'per_use_rate' => 'nullable|numeric|min:0',
         ]);
 
-        $facility = Facility::create($request->all());
+        // Ensure at least one rate is provided
+        if (!$validated['hourly_rate'] && !$validated['half_day_rate'] && 
+            !$validated['full_day_rate'] && !$validated['per_use_rate']) {
+            return response()->json([
+                'error' => 'At least one pricing rate must be provided'
+            ], 422);
+        }
+
+        $facility = Facility::create($validated);
         return response()->json($facility, 201);
     }
 
@@ -48,20 +56,28 @@ class FacilityApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'hourly_rate' => 'nullable|numeric',
-            'half_day_rate' => 'nullable|numeric',
-            'full_day_rate' => 'nullable|numeric',
-            'capacity' => 'nullable|integer',
+            'description' => 'nullable|string|max:1000',
+            'capacity' => 'nullable|integer|min:1',
+            'hourly_rate' => 'nullable|numeric|min:0',
+            'half_day_rate' => 'nullable|numeric|min:0',
+            'full_day_rate' => 'nullable|numeric|min:0',
+            'per_use_rate' => 'nullable|numeric|min:0',
         ]);
 
-        $facility->update($request->all());
+        // Ensure at least one rate is provided
+        if (!$validated['hourly_rate'] && !$validated['half_day_rate'] && 
+            !$validated['full_day_rate'] && !$validated['per_use_rate']) {
+            return response()->json([
+                'error' => 'At least one pricing rate must be provided'
+            ], 422);
+        }
+
+        $facility->update($validated);
         return response()->json($facility, 200);
     }
-
 
     // Only admin can delete
     public function destroy(Request $request, $id)

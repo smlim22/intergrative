@@ -28,49 +28,56 @@
     </div>
 </form>
 
-    <table class="table">
-        <thead>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Capacity</th>
+            <th>Hourly</th>
+            <th>Half Day</th>
+            <th>Full Day</th>
+            <th>Per Use</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($facilities as $facility)
             <tr>
-                <th>Name</th><th>Category</th><th>Description</th><th>Hourly</th><th>Half Day</th><th>Full Day</th><th>Per Use</th><th>Actions</th>
+                <td>{{ $facility->name }}</td>
+                <td>{{ $facility->category }}</td>
+                <td>
+                    @if($facility->description)
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" 
+                              title="{{ $facility->description }}" style="cursor: help;">
+                            {{ Str::limit($facility->description, 30) }}
+                        </span>
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>{{ $facility->capacity ?? '-' }}</td>
+                <td>{{ $facility->hourly_rate ? 'RM' . number_format($facility->hourly_rate, 2) : '-' }}</td>
+                <td>{{ $facility->half_day_rate ? 'RM' . number_format($facility->half_day_rate, 2) : '-' }}</td>
+                <td>{{ $facility->full_day_rate ? 'RM' . number_format($facility->full_day_rate, 2) : '-' }}</td>
+                <td>{{ $facility->per_use_rate ? 'RM' . number_format($facility->per_use_rate, 2) : '-' }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{{ route('facilities.edit', $facility) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form action="{{ route('facilities.destroy', $facility) }}" method="POST" 
+                              onsubmit="return confirm('Are you sure you want to delete this facility?')" 
+                              style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($facilities as $facility)
-                <tr>
-                    <td>{{ $facility->name }}</td>
-                    <td>{{ $facility->category }}</td>
-                    <td>
-                        @if($facility->description)
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $facility->description }}">
-                                {{ Str::limit($facility->description, 50) }}
-                            </span>
-                        @else
-                            <span class="text-muted">No description</span>
-                        @endif
-                    </td>
-                    <td>{{ $facility->hourly_rate ?? '-' }}</td>
-                    <td>{{ $facility->half_day_rate ?? '-' }}</td>
-                    <td>{{ $facility->full_day_rate ?? '-' }}</td>
-                    <td>{{ $facility->per_use_rate ?? '-' }}</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a href="{{ route('facilities.edit', $facility) }}" class="btn btn-sm btn-outline-primary">
-                                Edit
-                            </a>
-                            <form action="{{ route('facilities.destroy', $facility) }}" method="POST" class="d-inline" 
-                                  onsubmit="return confirm('Are you sure you want to delete this facility?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        @endforeach
+    </tbody>
+</table>
 
 
     <div class="col-md-4">
