@@ -49,4 +49,15 @@ class FeedbackController extends Controller
         $feedbacks = Feedback::where('facility_id', $facilityId)->latest()->get();
         return view('feedback.show', compact('facility', 'feedbacks'));
     }
+    // Admin-only: Delete feedback
+    public function destroy($facilityId, $feedbackId)
+    {
+        $user = auth()->user();
+    if (!$user || !$user->role || $user->role->name !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+        $feedback = Feedback::where('facility_id', $facilityId)->findOrFail($feedbackId);
+        $feedback->delete();
+        return redirect()->route('feedback.show', $facilityId)->with('success', 'Feedback deleted successfully.');
+    }
 }

@@ -20,7 +20,7 @@
         <div class="mb-3">
             <label for="rating" class="form-label">Rating:</label><br>
             <span class="star-rating">
-                        @for($i = 1; $i <= 5; $i++)
+                        @for($i = 5; $i >= 1; $i--)
                             <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}" required>
                             <label for="star{{ $i }}">&#9733;</label>
                         @endfor

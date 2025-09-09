@@ -50,6 +50,7 @@ Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])-
 Route::get('/facilities/{facility}/feedback', [App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
 Route::get('/facilities/{facility}/feedback/create', [App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
 Route::post('/facilities/{facility}/feedback', [App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
+Route::delete('/facilities/{facility}/feedback/{feedback}', [App\Http\Controllers\FeedbackController::class, 'destroy'])->name('feedback.destroy')->middleware(['auth', 'role:admin']);
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
 Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate')->middleware(['auth', 'role:admin']);

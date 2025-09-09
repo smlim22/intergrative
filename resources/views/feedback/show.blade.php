@@ -13,8 +13,8 @@
                         <div class="card-body">
                             <div>
                                 <strong>Rating:</strong>
-                                @for($i = 1; $i <= 5; $i++)
-                                    <span style="color:{{ $i <= $feedback->rating ? '#fd4' : '#ccc' }}">&#9733;</span>
+                                @for($i = 5; $i >= 1; $i--)
+                                    <span style="color:{{ $i > 5 - $feedback->rating ? '#fd4' : '#ccc' }}">&#9733;</span>
                                 @endfor
                             </div>
                             @if($feedback->comment)
@@ -28,6 +28,15 @@
                                     <small>By: Public User</small>
                                 @endif
                             </div>
+                            @auth
+                                @if(auth()->user()->role && auth()->user()->role->name == 'admin')
+                                    <form action="{{ route('feedback.destroy', [$facility->id, $feedback->id]) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this feedback?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger mt-2">Delete</button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
                     </div>
                 </div>
