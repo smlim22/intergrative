@@ -19,6 +19,7 @@ class AccountController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
+            'phone_number' => 'required|string|min:10|max:11',
         ]);
 
         $user = User::create([
@@ -26,12 +27,16 @@ class AccountController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => 3, //Default value for public user
+            'status' => $request->status ?? 'Active',
+            'student_id' => null,
+            'phone_number' => $request->phone_number,
         ]);
 
         Auth::login($user);
 
-        return redirect('/admin');
+        return redirect('/');
     }
+
     public function showLogin()
     {
         return view('/login');
@@ -42,6 +47,14 @@ class AccountController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Check if user status is Active
+            if (Auth::user()->status !== 'Active') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is inactive. Please contact the administrator.',
+                ]);
+            }
 
             $role = Auth::user()->role->name;
 
@@ -66,5 +79,23 @@ class AccountController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function activate($id)
+    {
+        $user = User::findOrFail($id);
+        $user->status = 'active';
+        $user->save();
+
+        return back()->with('success', 'User activated successfully.');
+    }
+
+    public function deactivate($id)
+    {
+        $user = User::findOrFail($id);
+        $user->status = 'inactive';
+        $user->save();
+
+        return back()->with('success', 'User deactivated successfully.');
     }
 }

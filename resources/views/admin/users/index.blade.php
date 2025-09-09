@@ -10,6 +10,12 @@
         <div class="col-12 d-flex justify-content-end">
             <form class="d-flex" method="GET" action="">
                 <input type="text" class="form-control me-2" name="search" placeholder="Search Users" style="width: 250px;">
+                <select name="role" class="form-select me-2" style="width: 150px;">
+                    <option value="">All Roles</option>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
         </div>
@@ -22,25 +28,52 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($users as $user)
-                    <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>
-                            @if($user->role_id == 1)
-                                Admin
-                            @elseif($user->role_id == 2)
-                                Student
-                            @elseif($user->role_id == 3)
-                                Public
-                            @else
-                                Unknown
-                            @endif
-                        </td>
-                    </tr>
+                    @if($user->role_id != 1)
+                        <tr>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>
+                                @if($user->role_id == 2)
+                                    Student
+                                @elseif($user->role_id == 3)
+                                    Public
+                                @else
+                                    Unknown
+                                @endif
+                            </td>
+                            <td>{{ $user->status }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <form method="GET" action="{{ route('admin.users.view', $user->id) }}">
+                                        <button type="submit" class="btn btn-sm btn-primary text-white">
+                                            View
+                                        </button>
+                                    </form>
+                                    @if($user->status === 'Active')
+                                        <form method="POST" action="{{ route('admin.users.deactivate', $user->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger ms-2">
+                                                Deactivate
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.users.activate', $user->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-success ms-2">
+                                                Activate
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>

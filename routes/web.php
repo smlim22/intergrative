@@ -8,10 +8,13 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\TwilioController;
 
 Route::get('/checkout', [PayPalController::class, 'checkout'])->name('checkout');
 Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
 Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
+Route::get('/whatsappTest', [TwilioController::class, 'testForm'])->name('whatsapp.test');
+
 
 
 /**
@@ -37,6 +40,9 @@ Route::put('/facilities/{facility}', [FacilityController::class, 'update'])->nam
 Route::delete('/facilities/{facility}', [FacilityController::class, 'destroy'])->name('facilities.destroy')->middleware(['auth', 'role:admin']);
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
+Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate')->middleware(['auth', 'role:admin']);
+Route::post('/admin/users/{user}/deactivate', [AccountController::class, 'deactivate'])->name('admin.users.deactivate')->middleware(['auth', 'role:admin']);
+Route::get('/admin/users/{user}', [AdminController::class, 'viewUser'])->name('admin.users.view')->middleware(['auth', 'role:admin']);
 
 Route::get('/', fn() => view('welcome', ['user' => Auth::user()]));
 
@@ -55,3 +61,10 @@ Route::get('/public', [PublicController::class, 'index'])->middleware(['auth', '
 // Route::get('/admin', function () {
 //     return view('admin');
 // })->middleware('auth');
+
+
+// PayPal
+Route::post('/paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
+
+// WhatsApp
+Route::post('/whatsapp/send', [TwilioController::class, 'sendWhatsApp'])->name('whatsapp.send');
