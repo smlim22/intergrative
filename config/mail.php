@@ -49,6 +49,16 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        'gmail' => [
+            'transport' => 'smtp',
+            'host' => 'smtp.gmail.com',
+            'port' => 587,
+            'encryption' => 'tls',
+            'username' => 'catwbisp8email@gmail.com',
+            'password' => 'hjiw tctj bdcn jhtm', // Gmail App Password
+            'timeout'=>30,
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

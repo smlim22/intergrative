@@ -7,19 +7,29 @@ use Illuminate\Support\Facades\Mail;
 
 class MailingController extends Controller
 {
-public function sendInvoiceViaEmail()
-{
-    $pdfPath = storage_path("app/public/invoices/gantt_NewTask.pdf");
+    public function showForm()
+    {
+        return view('emailTest'); // Blade form
+    }
 
-    Mail::send([], [], function ($message) use ($pdfPath) {
-        $message->to("customer@example.com")
-                ->subject("Your Invoice")
-                ->attach($pdfPath, [
-                    'as' => 'Invoice.pdf',
-                    'mime' => 'application/pdf',
-                ]);
-    });
+    public function sendInvoiceViaEmail(Request $request)
+    {
+        $request->validate([
+            'to' => 'required|email',
+        ]);
 
-    return "Email sent!";
-}
+        $to = $request->input('to');
+        $pdfPath = storage_path("app/public/invoices/gantt_New.pdf");
+
+        Mail::mailer('gmail')->send([], [], function ($message) use ($pdfPath, $to) {
+            $message->to($to)
+                    ->subject("Your Invoice")
+                    ->attach($pdfPath, [
+                        'as' => 'Invoice.pdf',
+                        'mime' => 'application/pdf',
+                    ]);
+        });
+
+        return back()->with('success', "Invoice sent via Gmail to {$to}!");
+    }
 }

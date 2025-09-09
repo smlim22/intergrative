@@ -9,6 +9,9 @@ use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\TwilioController;
+use App\Http\Controllers\DompdfController;
+
+Route::get('/invoice-test', [DompdfController::class, 'generateInvoice']);
 
 Route::get('/checkout', [PayPalController::class, 'checkout'])->name('checkout');
 Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON

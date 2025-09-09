@@ -13,6 +13,8 @@ Install the dependencies:
 ```bash
 composer require paypal/paypal-server-sdk
 composer require twilio/sdk
+composer require barryvdh/laravel-dompdf
+
 | Role     | Email                                         | Password |
 |----------|-----------------------------------------------|----------|
 | Normal   | sb-tu44634856447@personal.example.com         | i)<RA50J |
