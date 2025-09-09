@@ -15,25 +15,32 @@
             </ul>
         </div>
     @endif
-    <form method="POST" action="{{ route('feedback.store', $facility->id) }}">
-        @csrf
-        <div class="mb-3">
-            <label for="rating" class="form-label">Rating:</label><br>
-            <span class="star-rating">
-                        @for($i = 5; $i >= 1; $i--)
-                            <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}" required>
-                            <label for="star{{ $i }}">&#9733;</label>
-                        @endfor
-            </span>
+    @if(isset($existing) && $existing)
+        <div class="alert alert-info">
+            You have already left feedback for this facility.<br>
+            <a href="{{ route('feedback.edit', [$facility->id, $existing->id]) }}" class="btn btn-warning mt-2">Edit Your Feedback</a>
         </div>
-        @auth
-        <div class="mb-3">
-            <label for="comment" class="form-label">Feedback:</label>
-            <textarea name="comment" id="comment" class="form-control" rows="3"></textarea>
-        </div>
-        @endauth
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    @else
+        <form method="POST" action="{{ route('feedback.store', $facility->id) }}">
+            @csrf
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label><br>
+                <span class="star-rating">
+                    @for($i = 5; $i >= 1; $i--)
+                        <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}" required>
+                        <label for="star{{ $i }}">&#9733;</label>
+                    @endfor
+                </span>
+            </div>
+            @auth
+            <div class="mb-3">
+                <label for="comment" class="form-label">Feedback:</label>
+                <textarea name="comment" id="comment" class="form-control" rows="3"></textarea>
+            </div>
+            @endauth
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    @endif
 </div>
 <style>
 .star-rating input[type="radio"] {

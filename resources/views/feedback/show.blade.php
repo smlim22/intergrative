@@ -19,7 +19,11 @@
                             </div>
                             @if($feedback->comment)
                                 <div><strong>Comment:</strong> {{ $feedback->comment }}</div>
-                                <div><strong>Sentiment:</strong> <span class="text-muted">(pending integration)</span></div>
+                                @auth
+                                    @if(auth()->user()->role && auth()->user()->role->name == 'admin')
+                                        <div><strong>Sentiment:</strong> <span class="text-muted">{{ $sentiments[$feedback->id] ?? 'N/A' }}</span></div>
+                                    @endif
+                                @endauth
                             @endif
                             <div class="mt-2">
                                 @if($feedback->user)
