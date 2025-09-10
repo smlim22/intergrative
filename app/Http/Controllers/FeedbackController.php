@@ -101,7 +101,7 @@ class FeedbackController extends Controller
     // Admin-only: Delete feedback
     public function destroy($facilityId, $feedbackId)
     {
-        $user = auth()->user();
+        $user = Auth::user();
     if (!$user || !$user->role || $user->role->name !== 'admin') {
             abort(403, 'Unauthorized');
         }
