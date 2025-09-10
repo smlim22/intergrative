@@ -10,10 +10,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
+use App\Services\MailServiceInterface;
 
 class AccountController extends Controller
 {
+    private MailServiceInterface $mailService;
+
+    public function __construct(MailServiceInterface $mailService)
+    {
+        $this->mailService = $mailService;
+    }
+
     public function showRegister()
     {
         return view('/register');
@@ -105,6 +112,7 @@ class AccountController extends Controller
         return back()->with('success', 'User deactivated successfully.');
     }
 
+
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate([
@@ -114,28 +122,32 @@ class AccountController extends Controller
         try {
             $token = Str::random(40);
 
-            // Delete existing reset tokens
             DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
-            // Store new reset token (plain text)
             DB::table('password_reset_tokens')->insert([
                 'email' => $request->email,
                 'token' => Hash::make($token),
                 'created_at' => Carbon::now(),
             ]);
 
-            // Send email
             $resetUrl = url('/reset-password/' . $token . '?email=' . urlencode($request->email));
+            
+            // Use GmailAdapter through MailServiceInterface
+            $sent = $this->mailService->sendTemplate(
+                $request->email,
+                'Reset Password Notification',
+                'verify',        // Blade view file
+                ['resetUrl' => $resetUrl] // Data passed to the view
+            );
 
-            Mail::send('verify', ['resetUrl' => $resetUrl], function ($message) use ($request) {
-                $message->from(config('mail.from.address'), config('mail.from.name'));
-                $message->to($request->email)->subject('Reset Password Notification');
-            });
+            if (!$sent) {
+                return back()->with('error', 'Failed to send email. Try again.');
+            }
+
             return back()->with('success', 'We have e-mailed your password reset link!');
-
         } catch (\Exception $e) {
             Log::error('Password Reset Email Error: '.$e->getMessage());
-            return back()->with('error', 'Something went wrong while sending the reset email. Please try again.');
+            return back()->with('error', 'Something went wrong while sending the reset email.');
         }
     }
     

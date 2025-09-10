@@ -20,6 +20,9 @@
                     Unknown
                 @endif
             </p>
+            @if ($user->role_id == 2)
+                <p class="card-text"><strong>Student ID:</strong> {{ $user->student_id }}</p>
+            @endif
             <p class="card-text"><strong>Phone Number:</strong> {{ $user->phone_number }}</p>
             <p class="card-text"><strong>Joined On:</strong> {{ $user->created_at->format('d/m/Y') }}</p>
             <p class="card-text"><strong>Status:</strong> {{ $user->status }}</p>

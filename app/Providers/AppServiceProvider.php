@@ -8,6 +8,9 @@ use App\Listeners\GenerateInvoice;
 use App\Listeners\EmailInvoice;
 use App\Listeners\WhatsAppBookingMessage;
 use Illuminate\Support\Facades\Event;
+use App\Services\MailServiceInterface;
+use App\Services\GmailAdapter;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -15,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            MailServiceInterface::class,
+            GmailAdapter::class
+        );
     }
 
 
