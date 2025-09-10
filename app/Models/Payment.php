@@ -11,10 +11,10 @@ class Payment extends Model
 
     protected $fillable = [
         'reservation_id',
-        'paypal_payment_id',
+        'id',
         'amount',
         'currency',
-        'status'
+        'payment_statusstatus'
     ];
 
     // Relationships
