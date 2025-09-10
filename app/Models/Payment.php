@@ -14,7 +14,8 @@ class Payment extends Model
         'id',
         'amount',
         'currency',
-        'payment_statusstatus'
+        'payment_status',
+        'invoice_path',
     ];
 
     // Relationships

@@ -12,15 +12,17 @@ class GenerateInvoice
     $reservation = $event->payment->reservation;
 
     $invoiceData = [
-        'invoice_no'  => 'INV-' . $event->payment->id,
-        'customer'    => $reservation->user->name,
-        'email'       => $reservation->user->email,
-        'facility'    => $reservation->facility->name,
-        'date'        => $reservation->reservation_date,
-        'time'        => $reservation->start_time . ' - ' . $reservation->end_time,
-        'amount'      => $event->payment->amount,
-        'currency'    => $event->payment->currency,
+        'invoice_no' => 'INV-' . $event->payment->id,
+        'customer'   => $reservation->user->name,
+        'email'      => $reservation->user->email,
+        'facility'   => $reservation->facility->name,
+        'date'       => $reservation->reservation_date,
+        'time'       => $reservation->start_time . ' - ' . $reservation->end_time,
+        'amount'     => $event->payment->amount,
+        'currency'   => $event->payment->currency,
+        'reservation'=> $reservation, 
     ];
+
 
 
         $pdf = Pdf::loadView('invoices.invoice-template', $invoiceData);

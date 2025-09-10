@@ -3,7 +3,11 @@
 namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-
+use App\Events\PaymentCompleted;
+use App\Listeners\GenerateInvoice;
+use App\Listeners\EmailInvoice;
+use App\Listeners\WhatsAppBookingMessage;
+use Illuminate\Support\Facades\Event;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -13,13 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-    protected $listen = [
-        \App\Events\PaymentCompleted::class => [
-            \App\Listeners\GenerateInvoice::class,
-            \App\Listeners\EmailInvoice::class,
-            \App\Listeners\WhatsAppBookingMessage::class,
-        ],
-    ];
+
 
     /**
      * Bootstrap any application services.
@@ -29,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin-only', function ($user) {
             return $user->role === 'admin';
         });
+
+    Event::listen(PaymentCompleted::class, GenerateInvoice::class);
+    Event::listen(PaymentCompleted::class, EmailInvoice::class);
+    Event::listen(PaymentCompleted::class, WhatsAppBookingMessage::class);
     }
 }

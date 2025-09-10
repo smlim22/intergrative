@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Payment;
 
 class DompdfController extends Controller
 {
@@ -32,5 +34,20 @@ class DompdfController extends Controller
 
         // Stream to browser
         return $pdf->stream("invoice_{$invoiceData['invoice_no']}.pdf");
+    }
+public function show($id)
+    {
+        $payment = Payment::findOrFail($id);
+
+        $path = "invoices/invoice_{$payment->id}.pdf";
+
+        if (!Storage::disk('public')->exists($path)) {
+            return response()->json(['error' => 'Invoice not found'], 404);
+        }
+
+        $file = Storage::disk('public')->get($path);
+        $type = Storage::disk('public')->mimeType($path);
+
+        return response($file, 200)->header('Content-Type', $type);
     }
 }
