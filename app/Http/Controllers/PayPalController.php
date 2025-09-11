@@ -61,7 +61,9 @@ public function success(Request $request)
         'payment_status' => strtolower($status),
         'transaction_id' => $result->id, // PayPal's transaction ID
     ]);
-
+    
+    $reservation->status = 'paid';
+    $reservation->save();
 
     // 🔹 Fire event → Listeners will auto-generate invoice, email, WhatsApp
     event(new PaymentCompleted($payment));

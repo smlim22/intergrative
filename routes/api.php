@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\FacilityApiController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\Api\AdminApiController;
+use App\Http\Controllers\Api\Payment\PaymentStatusApiController;
+use App\Http\Controllers\Api\Booking\BookingApi;
+
 
 Route::get('/facilities', [FacilityApiController::class, 'index']);
 Route::get('/facilities/{facility}', [FacilityApiController::class, 'show']);
@@ -27,3 +30,6 @@ Route::prefix('admin/users')->group(function () {
 });
 
 Route::post('/send-whatsapp', [TwilioController::class, 'sendWhatsApp']);
+Route::get('/payment-status', [PaymentStatusApiController::class, 'checkPayment']);
+Route::get('/booking/check-availability', [BookingApi::class, 'checkAvail']);
+Route::get('/booking/schedule', [BookingApi::class, 'getSchedule']);
