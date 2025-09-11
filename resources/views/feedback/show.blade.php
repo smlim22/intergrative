@@ -3,6 +3,17 @@
 @section('content')
 <div class="container">
     <h2>Feedback for {{ $facility->name }}</h2>
+    @if(isset($averageRating))
+        <div class="mb-3">
+            <strong>Average Rating:</strong>
+            <span>
+                @for($i = 1; $i <= 5; $i++)
+                    <span style="color:{{ $i <= round($averageRating) ? '#fd4' : '#ccc' }}">&#9733;</span>
+                @endfor
+                ({{ $averageRating }} / 5)
+            </span>
+        </div>
+    @endif
     @if($feedbacks->isEmpty())
         <p>No feedback yet.</p>
     @else

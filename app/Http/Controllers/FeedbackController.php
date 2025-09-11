@@ -91,12 +91,16 @@ class FeedbackController extends Controller
         $feedbacks = Feedback::where('facility_id', $facilityId)->latest()->get();
         $user = Auth::user();
         $sentiments = [];
+        $averageRating = null;
+        if ($feedbacks->count() > 0) {
+            $averageRating = round($feedbacks->avg('rating'), 2);
+        }
         if ($user && $user->role && $user->role->name === 'admin') {
             foreach ($feedbacks as $feedback) {
                 $sentiments[$feedback->id] = SentimentService::analyze($feedback->comment);
             }
         }
-        return view('feedback.show', compact('facility', 'feedbacks', 'sentiments'));
+        return view('feedback.show', compact('facility', 'feedbacks', 'sentiments', 'averageRating'));
     }
     // Admin-only: Delete feedback
     public function destroy($facilityId, $feedbackId)
