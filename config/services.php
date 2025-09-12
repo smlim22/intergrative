@@ -45,5 +45,19 @@ return [
 
     ],
 
+    // Sentiment analysis service config with driver switch
+    'sentiment' => [
+        'driver' => env('SENTIMENT_DRIVER', 'offline'), // offline | azure
+        'azure' => [
+            'endpoint' => env('AZURE_TEXT_ENDPOINT'), // e.g., https://<region>.api.cognitive.microsoft.com
+            'key' => env('AZURE_TEXT_KEY'),
+            'language' => env('SENTIMENT_LANGUAGE', 'en'),
+        ],
+        // Optional: add keys for other providers if you switch later
+        'textrazor' => [
+            'key' => env('TEXTRAZOR_API_KEY'),
+        ],
+    ],
+
 
 ];
