@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
+
 @section('content')
 <div class="container">
     <h1>Facility & Resource Management</h1>
-    
+   
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -11,10 +12,11 @@
         </div>
     @endif
 
+
     <!-- Search and Filter Form (Include Status Filter) -->
     <form method="GET" action="{{ route('facilities.index') }}" class="row g-3 mb-4">
         <div class="col-md-3">
-            <input type="text" name="search" class="form-control" 
+            <input type="text" name="search" class="form-control"
                    placeholder="Search facility name..." value="{{ request('search') }}">
         </div>
         <div class="col-md-3">
@@ -39,54 +41,33 @@
         </div>
     </form>
 
+
     <table class="table">
         <thead>
             <tr>
-                <td>{{ $facility->name }}</td>
-                <td>{{ $facility->category }}</td>
-                <td>
-                    @if($facility->description)
-                        <span data-bs-toggle="tooltip" data-bs-placement="top" 
-                              title="{{ $facility->description }}" style="cursor: help;">
-                            {{ Str::limit($facility->description, 30) }}
-                        </span>
-                    @else
-                        -
-                    @endif
-                </td>
-                <td>{{ $facility->capacity ?? '-' }}</td>
-                <td>{{ $facility->hourly_rate ? 'RM' . number_format($facility->hourly_rate, 2) : '-' }}</td>
-                <td>{{ $facility->half_day_rate ? 'RM' . number_format($facility->half_day_rate, 2) : '-' }}</td>
-                <td>{{ $facility->full_day_rate ? 'RM' . number_format($facility->full_day_rate, 2) : '-' }}</td>
-                <td>{{ $facility->per_use_rate ? 'RM' . number_format($facility->per_use_rate, 2) : '-' }}</td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <a href="{{ route('facilities.edit', $facility) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                        <form action="{{ route('facilities.destroy', $facility) }}" method="POST" 
-                              onsubmit="return confirm('Are you sure you want to delete this facility?')" 
-                              style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                        </form>
-                    </div>
-                            <a href="{{ url('/facilities/' . $facility->id . '/feedback') }}" class="btn btn-info btn-sm mt-1">Reviews & Ratings</a>
-                </td>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Capacity</th>
+                <th>Pricing</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse($facilities as $facility)
-                <tr class="{{ $facility->isDisabled() ? 'table-secondary' : '' }}">
+                <tr class="{{ $facility->isDisabled() ? 'table-secondary disabled-facility' : '' }}">
                     <td>
                         <strong>{{ $facility->name }}</strong>
                         @if($facility->isDisabled())
                             <span class="badge bg-danger ms-2">Disabled</span>
                         @endif
                     </td>
-                    <td>{!! $facility->category !!}</td>
-                    <td>
+                    <td class="{{ $facility->isDisabled() ? 'text-muted' : '' }}">
+                        {!! $facility->category !!}
+                    </td>
+                    <td class="{{ $facility->isDisabled() ? 'text-muted' : '' }}">
                         @if($facility->description)
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" 
+                            <span data-bs-toggle="tooltip" data-bs-placement="top"
                                   title="{{ $facility->description }}" style="cursor: help;">
                                 {{ Str::limit($facility->description, 40) }}
                             </span>
@@ -94,30 +75,34 @@
                             <em class="text-muted">No description</em>
                         @endif
                     </td>
-                    <td>{!! $facility->getCapacityDisplay() !!}</td>
-                    <td>{{ $facility->getFormattedPricing() }}</td>
+                    <td class="{{ $facility->isDisabled() ? 'text-muted' : '' }}">
+                        {!! $facility->getCapacityDisplay() !!}
+                    </td>
+                    <td class="{{ $facility->isDisabled() ? 'text-muted' : '' }}">
+                        {{ $facility->getFormattedPricing() }}
+                    </td>
                     <td>
                         <div class="btn-group" role="group">
-                            <a href="{{ route('facilities.edit', $facility) }}" 
-                               class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('facilities.edit', $facility) }}"
+                               class="btn btn-sm btn-outline-primary {{ $facility->isDisabled() ? 'opacity-75' : '' }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            
+                           
                             @if($facility->isActive())
-                                <form action="{{ route('facilities.disable', $facility) }}" method="POST" 
-                                      onsubmit="return confirm('Are you sure you want to disable this facility?')" 
+                                <form action="{{ route('facilities.disable', $facility) }}" method="POST"
+                                      onsubmit="return confirm('Are you sure you want to disable this facility?')"
                                       style="display: inline;">
-                                    @csrf 
+                                    @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-sm btn-danger">
                                         <i class="fas fa-ban"></i> Disable
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('facilities.enable', $facility) }}" method="POST" 
+                                <form action="{{ route('facilities.enable', $facility) }}" method="POST"
                                       onsubmit="return confirm('Are you sure you want to enable this facility?')"
                                       style="display: inline;">
-                                    @csrf 
+                                    @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-sm btn-success">
                                         <i class="fas fa-check"></i> Enable
@@ -125,6 +110,10 @@
                                 </form>
                             @endif
                         </div>
+                        <a href="{{ url(path: '/facilities/' . $facility->id . '/feedback') }}" 
+                           class="btn btn-info btn-sm mt-1 {{ $facility->isDisabled() ? 'opacity-75' : '' }}">
+                            Reviews & Ratings
+                        </a>
                     </td>
                 </tr>
             @empty
@@ -137,6 +126,7 @@
         </tbody>
     </table>
 
+
     <div class="mt-3">
         <a href="{{ route('facilities.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Add New Facility
@@ -144,6 +134,7 @@
     </div>
 </div>
 @endsection
+
 
 @section('scripts')
 <script>
@@ -155,4 +146,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+@endsection
+@section('styles')
+<style>
+.disabled-facility {
+    background-color: #f8f9fa !important;
+    opacity: 0.8;
+}
+
+.disabled-facility td {
+    background-color: #e9ecef !important;
+}
+
+.disabled-facility:hover {
+    background-color: #e2e6ea !important;
+}
+
+.disabled-facility:hover td {
+    background-color: #dee2e6 !important;
+}
+
+/* Optional: Add strikethrough effect for disabled facility names */
+.disabled-facility .facility-name-disabled {
+    text-decoration: line-through;
+    color: #6c757d !important;
+}
+
+/* Make buttons slightly transparent for disabled facilities */
+.disabled-facility .opacity-75 {
+    opacity: 0.75 !important;
+}
+</style>
 @endsection
