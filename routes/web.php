@@ -17,9 +17,9 @@ use App\Models\Payment;
 /**
  * Dummy login route to stop redirect error during testing.
  */
-Route::get('/login', function () {
-    return redirect('/facilities');
-})->name('login');
+//Route::get('/login', function () {
+  //  return redirect('/facilities');
+//})->name('login');
 
 /**
  * Public route to view facilities (no login needed)
@@ -42,6 +42,11 @@ Route::post('/facilities/{facility}/feedback', [App\Http\Controllers\FeedbackCon
 Route::get('/facilities/{facility}/feedback/{feedback}/edit', [App\Http\Controllers\FeedbackController::class, 'edit'])->name('feedback.edit')->middleware('auth');
 Route::put('/facilities/{facility}/feedback/{feedback}', [App\Http\Controllers\FeedbackController::class, 'update'])->name('feedback.update')->middleware('auth');
 Route::delete('/facilities/{facility}/feedback/{feedback}', [App\Http\Controllers\FeedbackController::class, 'destroy'])->name('feedback.destroy')->middleware(['auth', 'role:admin']);
+Route::patch('/facilities/{facility}/disable', [FacilityController::class, 'disable'])->name('facilities.disable')->middleware(['auth', 'role:admin']);
+Route::patch('/facilities/{facility}/enable', [FacilityController::class, 'enable'])->name('facilities.enable')->middleware(['auth', 'role:admin']);
+Route::get('/facilities/public', [FacilityController::class, 'publicIndex'])->name('facilities.public');
+
+
 
 Route::get('admin/users', [AdminController::class, 'users'])->name('users.index')->middleware(['auth', 'role:admin']);
 Route::post('/admin/users/{user}/activate', [AccountController::class, 'activate'])->name('admin.users.activate')->middleware(['auth', 'role:admin']);

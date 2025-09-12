@@ -1,21 +1,59 @@
 <?php
+// filepath: routes/api.php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\FacilityApiController;
+use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\Api\AdminApiController;
 use App\Http\Controllers\Api\Payment\PaymentStatusApiController;
 use App\Http\Controllers\Api\Booking\BookingApi;
 
 
-Route::get('/facilities', [FacilityApiController::class, 'index']);
-Route::get('/facilities/{facility}', [FacilityApiController::class, 'show']);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/facilities', [FacilityApiController::class, 'store']);
-    Route::put('/facilities/{id}', [FacilityApiController::class, 'update']);
-    Route::delete('/facilities/{id}', [FacilityApiController::class, 'destroy']);
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth');
+
+// ===== PUBLIC API ROUTES (No Authentication Required) =====
+Route::prefix('facilities')->group(function () {
+    // Get all facilities (with filters and pagination)
+    Route::get('/', [FacilityController::class, 'apiIndex']);
+    
+    // Get single facility
+    Route::get('/{facility}', [FacilityController::class, 'apiShow']);
+    
+    // Get facilities by category
+    Route::get('/category/{category}', [FacilityController::class, 'apiByCategory']);
+    
+    // Search facilities
+    Route::get('/search', [FacilityController::class, 'apiSearch']);
+    
+    // Get all categories
+    Route::get('/categories', [FacilityController::class, 'apiCategories']);
+    
+    // Get facility statistics
+    Route::get('/stats', [FacilityController::class, 'apiStats']);
+});
+
+// ===== ADMIN-ONLY API ROUTES (Authentication Required) =====
+Route::middleware(['auth', 'role:admin'])->prefix('facilities')->group(function () {
+    // Create new facility
+    Route::post('/', [FacilityController::class, 'apiStore']);
+    
+    // Update facility
+    Route::put('/{facility}', [FacilityController::class, 'apiUpdate']);
+    
+    // Disable facility
+    Route::patch('/{facility}/disable', [FacilityController::class, 'apiDisable']);
+    
+    // Enable facility
+    Route::patch('/{facility}/enable', [FacilityController::class, 'apiEnable']);
 });
 
 Route::prefix('admin/users')->group(function () {
