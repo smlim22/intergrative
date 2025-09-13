@@ -33,9 +33,7 @@
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #0d6efd;
             color: white;
-            text-decoration: none;
             border-radius: 5px;
             margin-top: 10px;
         }
@@ -57,7 +55,7 @@
             <h2>Reset Your Password</h2>
         </div>
         <div class="content">
-            <p>Click the button below to reset your password:</p>
+            <p>Click the link below to reset your password:</p>
             <a href="{{ $resetUrl }}" class="btn">Reset Password</a>
             <p class="footer">
                 If you did not request a password reset, no further action is required.
