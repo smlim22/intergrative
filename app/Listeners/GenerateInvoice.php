@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Author : Adrean Goh
+ */
 namespace App\Listeners;
 
 use App\Events\PaymentCompleted;
@@ -10,6 +14,10 @@ class GenerateInvoice
     public function handle(PaymentCompleted $event)
     {
     $reservation = $event->payment->reservation;
+        $user=$event->payment->user;
+        if($user->role->name != 'public'){
+            return;
+        }
 
     $invoiceData = [
         'invoice_no' => 'INV-' . $event->payment->id,
@@ -30,7 +38,6 @@ class GenerateInvoice
 
         Storage::disk('public')->put($filePath, $pdf->output());
 
-        // Attach path to payment for later use
         $event->payment->update(['invoice_path' => $filePath]);
     }
 }

@@ -69,5 +69,5 @@ Route::prefix('admin/users')->group(function () {
 
 Route::post('/send-whatsapp', [TwilioController::class, 'sendWhatsApp']);
 Route::get('/payment-status', [PaymentStatusApiController::class, 'checkPayment']);
-Route::get('/booking/check-availability', [BookingApi::class, 'checkAvail']);
+Route::post('/booking/check-availability', [BookingApi::class, 'checkAvail']);
 Route::get('/booking/schedule', [BookingApi::class, 'getSchedule']);

@@ -23,6 +23,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('users.index') }}">User Management</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('schedule') }}">Check Facility Schedule</a>
+                    </li>
                 </ul>
                 <form method="POST" class="d-flex" action="{{ route('logout') }}" role="search">
                     @csrf

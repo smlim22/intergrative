@@ -7,11 +7,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\DompdfController;
-use App\Models\Payment;
 
+use App\Http\Controllers\BookingController;
 
 
 /**
@@ -81,24 +82,32 @@ Route::get('/public', [PublicController::class, 'index'])->middleware(['auth', '
 
 
 
-Route::post('/paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
-Route::get('/invoice/{id}', [DompdfController::class, 'show'])->name('invoice.show');
-Route::get('/invoice-test', [DompdfController::class, 'generateInvoice']);
-Route::get('/payment/test', [PayPalController::class, 'testPayment'])->name('payment.test');
-Route::get('/checkout', [PayPalController::class, 'checkout'])->name('checkout');
-Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
-Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
 
-Route::post('/whatsapp/send', [TwilioController::class, 'sendWhatsApp'])->name('whatsapp.send');
 
-Route::get('/whatsappTest', [TwilioController::class, 'testForm'])->name('whatsapp.test');
-// web.php
+
+// payment
 Route::get('/test/payComplete/{id}', function ($id) {
     $payment = \App\Models\Payment::findOrFail($id);
     return view('payment.payComplete', compact('payment'));
 });
+Route::post('/paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
 
-
+Route::get('/payment/test', [PayPalController::class, 'testPayment'])->name('payment.test');
+Route::get('/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
+Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
+Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
+Route::get('/checkoutFree', [PayPalController::class, 'bookingStudentAdmin'])->name('paypal.bookingStudentAdmin');
 
 // WhatsApp Invoice PDF
-Route::post('/whatsapp/invoice', [TwilioController::class, 'sendInvoicePdf'])->name('whatsapp.invoice');
+Route::post('/whatsapp/invoice', [TwilioController::class, 'sendInvoicePdf'])->name('whatsapp.invoice');// unused
+Route::post('/whatsapp/send', [TwilioController::class, 'sendWhatsApp'])->name('whatsapp.send');
+Route::get('/whatsappTest', [TwilioController::class, 'testForm'])->name('whatsapp.test');
+
+//Booking/scheduling
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.form');
+Route::get('/booking/check-availability', [BookingController::class, 'checkAvail'])->name('booking.checkAvail');
+Route::get('/schedule', [BookingController::class, 'schedule'])->name('schedule');
+Route::get('/bookCheck', [BookingController::class, 'bookCheck'])->name('bookCheck');
+
+Route::get('/invoice/{id}', [DompdfController::class, 'show'])->name('invoice.show');
+Route::get('/invoice-test', [DompdfController::class, 'generateInvoice']);

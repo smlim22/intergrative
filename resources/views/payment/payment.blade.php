@@ -3,10 +3,15 @@
 @section('title', 'Payment')
 
 @section('content')
+<?php 
+/**
+ * Author : Adrean Goh
+ */
+?>
 <div class="card shadow p-4">
     <h2 class="mb-3">Make Payment</h2>
 
-    {{-- Display success/error messages --}}
+    <!--  success/error msg -->
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -19,7 +24,7 @@
         </div>
     @endif
 
-    {{-- Payment form --}}
+    
     <form method="POST" action="{{ route('payment.process') }}">
         @csrf
         <div class="mb-3">

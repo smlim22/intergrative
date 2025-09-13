@@ -1,4 +1,7 @@
 <?php
+/**
+ * Author : Adrean Goh
+ */
 namespace App\Listeners;
 
 use App\Events\PaymentCompleted;
@@ -16,6 +19,9 @@ class WhatsAppBookingMessage
     public function handle(PaymentCompleted $event)
     {
         $user = $event->payment->user;
+        if(empty($user->phone_number)){
+            return;
+        }
 
         // Build booking details message
         $messageBody = "✅ Booking Successful!\n\n"
