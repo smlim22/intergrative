@@ -2,7 +2,7 @@
 @section('title', 'Booking')
 @section('content')
 <?php 
-/**
+/** UNUSED FILE
  * Author : Adrean Goh
  */
 use App\Models\User;

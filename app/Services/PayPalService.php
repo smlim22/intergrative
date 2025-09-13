@@ -22,7 +22,7 @@ class PayPalService
         $this->client = new PayPalHttpClient($environment);
     }
 
-    public function createOrder($amount, $currency = 'USD')
+    public function createOrder($amount, $currency = 'MYR')
     {
         $request = new OrdersCreateRequest();
         $request->prefer('return=representation');

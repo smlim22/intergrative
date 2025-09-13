@@ -9,7 +9,7 @@ use App\Services\PayPalService;
 use App\Events\PaymentCompleted;
 use App\Models\Payment;
 use App\Models\Reservation;
-
+use Carbon\Carbon;
 class PayPalController extends Controller
 {
     protected $paypal;
@@ -22,33 +22,52 @@ class PayPalController extends Controller
 
 public function checkout(Request $request)
 {
-    $reservationId = $request->input('reservation_id');
-    $reservation = Reservation::with('facility')->findOrFail($reservationId);
+    $request->validate([
+        'facility_id' => 'required|exists:facilities,id',
+        'reservation_date' => 'required|date',
+        'start_time' => 'required',
+        'end_time' => 'required',
+    ]);
 
-    // ✅ Get hourly rate from facility
-    $hourlyRate = $reservation->facility->hourly_rate;
+    $user = auth()->user();
 
-    // ✅ Calculate hours between start & end time
-    $start = \Carbon\Carbon::parse($reservation->start_time);
-    $end   = \Carbon\Carbon::parse($reservation->end_time);
-    $hours = $end->diffInHours($start);
+    // Create reservation first
+    $reservation = Reservation::create([
+        'facility_id' => $request->facility_id,
+        'user_id' => $user->id,
+        'reservation_date' => $request->reservation_date,
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+        'status' => 'pending',
+    ]);
+    //swapped from using Carbon to pure php to fix error
+$startTime = $reservation->start_time; 
+$endTime = $reservation->end_time;     
+$hourlyRate = $reservation->facility->hourly_rate;
 
-    if ($hours < 1) {
-        $hours = 1; // minimum 1 hour
-    }
+// Conversion 
+list($startHour, $startMin) = explode(':', $startTime);
+list($endHour, $endMin) = explode(':', $endTime);
 
-    // ✅ Calculate total cost
-    $amount = $hourlyRate * $hours;
+$startMinutes = ($startHour * 60) + $startMin;
+$endMinutes = ($endHour * 60) + $endMin;
 
-    // Create PayPal order
-    $order = $this->paypal->createOrder($amount, 'USD'); 
-    // 👉 if you want MYR, use 'MYR' (ensure PayPal supports it for your account)
+// Calculate difference
+$totalMinutes = $endMinutes - $startMinutes;
+if ($totalMinutes < 60) {
+    $totalMinutes = 60; // minimum 1 hour
+}
+$totalHours = $totalMinutes / 60;
 
+$totalHoursRounded = ceil($totalHours);
+
+
+    $amount = $hourlyRate * $totalHoursRounded;
+    $order = $this->paypal->createOrder($amount, 'MYR');
     foreach ($order->result->links as $link) {
         if ($link->rel === 'approve') {
-            // Save reservation id & amount in session for later use
             session([
-                'reservation_id' => $reservationId,
+                'reservation_id' => $reservation->id,
                 'amount' => $amount,
                 'currency' => 'MYR',
             ]);
@@ -70,28 +89,25 @@ public function success(Request $request)
         return redirect()->route('checkout')->with('error', 'Missing PayPal token.');
     }
 
-    // ✅ Capture PayPal order
+   
     $capture = $this->paypal->captureOrder($orderId);
     $result = $capture->result;
 
-    // ✅ Get actual PayPal amount
+
     $paypalAmount   = $result->purchase_units[0]->payments->captures[0]->amount->value;
     $paypalCurrency = $result->purchase_units[0]->payments->captures[0]->amount->currency_code;
     $status         = $result->status;
 
-    // ✅ Get expected values from session
     $reservationId = session('reservation_id');
     $expectedAmount = session('amount');
     $expectedCurrency = session('currency', 'USD');
 
     $reservation = Reservation::findOrFail($reservationId);
 
-    // ✅ Verify PayPal charge matches expected
     if (round($paypalAmount, 2) != round($expectedAmount, 2) || $paypalCurrency != $expectedCurrency) {
         return redirect()->route('facilities.index')->with('error', 'Payment mismatch detected. Please contact support.');
     }
 
-    // ✅ Save payment record
     $payment = Payment::create([
         'reservation_id' => $reservation->id,
         'amount'         => $expectedAmount,
@@ -101,17 +117,15 @@ public function success(Request $request)
         'transaction_id' => $result->id, // PayPal’s transaction ID
     ]);
 
-    // ✅ Update reservation
+
     $reservation->status = 'paid';
     $reservation->save();
 
-    // ✅ Fire event (send invoice/email/WhatsApp)
+//listner event
     event(new PaymentCompleted($payment));
 
-    // ✅ Clear session data
     session()->forget(['reservation_id', 'amount', 'currency']);
-
-    return redirect()->route('facilities.index')->with('success', 'Payment successful! Invoice sent via email & WhatsApp.');
+    return view('payment/payComplete', compact('payment'));
 }
 
 
@@ -143,8 +157,6 @@ public function success(Request $request)
 
 public function bookingStudentAdmin(Request $request)
 {
-$reservationId = $request->input('reservation_id');
-    $reservation = Reservation::findOrFail($reservationId);
 
     $user = auth()->user();
 
@@ -152,9 +164,18 @@ $reservationId = $request->input('reservation_id');
         return redirect()->route('checkout')->with('error', 'This option is only for Admins/Students.');
     }
 
-
-    $reservation->status = 'confirmed';
-    $reservation->save();
+    /*
+$reservationId = $request->input('reservation_id');
+    $reservation = Reservation::findOrFail($reservationId);
+*/
+    $reservation = Reservation::create([
+        'facility_id' => $request->facility_id,
+        'user_id' => $user->id,
+        'reservation_date' => $request->reservation_date,
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+        'status' => 'confirmed',
+    ]);
 
     /* suggestion from AI
     $payment = Payment::create([

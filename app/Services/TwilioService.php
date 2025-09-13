@@ -13,12 +13,12 @@ class TwilioService
     {
         $sid = config('services.twilio.sid');
         $token = config('services.twilio.token');
-
         $this->twilio = new Client($sid, $token);
     }
 
     public function sendWhatsAppMessage($to, $body, $contentSid = null, $variables = [])
     {
+         $to = $this->standardizePhoneNum($to);
         $to = str_starts_with($to, 'whatsapp:') ? $to : "whatsapp:$to";
 
         $data = [
@@ -36,7 +36,7 @@ class TwilioService
 
     //MODIFY THIS
     public function sendInvoicePdf($to)
-{
+{    $to = $this->standardizePhoneNum($to);
     $to = str_starts_with($to, 'whatsapp:') ? $to : "whatsapp:$to";
 
     // Google Drive direct download link
@@ -51,6 +51,16 @@ class TwilioService
         ]
     );
 }
-
-    
+//adding function to auto fix phone no format (+60123456789)
+    private function standardizePhoneNum($number){
+        $number = str_replace(['-',''],'',$number);
+        $number = preg_replace('/[\s\-\(\)]/', '', $number);
+         if (str_starts_with($number, '+6')) {
+            return $number;
+        }
+        if (str_starts_with($number, '0')) {
+            return '+6' . $number;
+        }
+         return $number;
+    }
 }

@@ -18,6 +18,10 @@ public function checkAvail(Request $request){
     if(!$facilityID || !$reservationDate || !$startTime || !$endTime){
         return response()->json(['error' => 'Missing required parameters'], 400);
     }
+    $facility = Facility::find($facilityID);
+    if (!$facility) {
+        return response()->json(['error' => 'Facility not found'], 404);
+    }
 
     $conflict = Reservation::where('facility_id', $facilityID)
         ->whereDate('reservation_date', $reservationDate)
@@ -28,6 +32,7 @@ public function checkAvail(Request $request){
     if ($conflict) {
         return response()->json(['available' => false, 'message' => 'Time slot is already booked'], 200);
     } else {
+        
         return response()->json(['available' => true, 'message' => 'Time slot is available'], 200);
     }
 }

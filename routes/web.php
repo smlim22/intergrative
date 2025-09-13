@@ -93,10 +93,12 @@ Route::get('/test/payComplete/{id}', function ($id) {
 Route::post('/paypal/pay', [PayPalController::class, 'pay'])->name('paypal.pay');
 
 Route::get('/payment/test', [PayPalController::class, 'testPayment'])->name('payment.test');
-Route::get('/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
+Route::post('/checkout', [PayPalController::class, 'checkout'])->name('paypal.checkout');
 Route::get('/payment/success', [PayPalController::class, 'success'])->name('paypal.success');// returns JSON
 Route::get('/payment/cancel', [PayPalController::class, 'cancel'])->name('paypal.cancel');
-Route::get('/checkoutFree', [PayPalController::class, 'bookingStudentAdmin'])->name('paypal.bookingStudentAdmin');
+Route::post('/checkoutFree', [PayPalController::class, 'bookingStudentAdmin'])
+    ->name('paypal.bookingStudentAdmin'); 
+
 
 // WhatsApp Invoice PDF
 Route::post('/whatsapp/invoice', [TwilioController::class, 'sendInvoicePdf'])->name('whatsapp.invoice');// unused

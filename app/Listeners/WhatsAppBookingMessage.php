@@ -18,20 +18,24 @@ class WhatsAppBookingMessage
 
     public function handle(PaymentCompleted $event)
     {
-        $user = $event->payment->user;
+    $payment = $event->payment;
+
+    $reservation = $payment->reservation; 
+    $user = $reservation->user;           
+    $facility = $reservation->facility;   
         if(empty($user->phone_number)){
             return;
         }
 
         // Build booking details message
-        $messageBody = "✅ Booking Successful!\n\n"
-            . "Facility: {$event->payment->facility->name}\n"
-            . "Date/Time: {$event->payment->reservation_time}\n"
-            . "Amount Paid: RM " . number_format($event->payment->amount, 2) . "\n\n"
-            . "Thank you, {$user->name}!";
+$messageBody = "✅ Booking Successful!\n\n"
+        . "Facility: {$facility->name}\n"
+        . "Date/Time: {$reservation->reservation_date} {$reservation->start_time} - {$reservation->end_time}\n"
+        . "Amount Paid: RM " . number_format($payment->amount, 2) . "\n\n"
+        . "Thank you, {$user->name}!";
 
         $this->twilio->sendWhatsAppMessage(
-            $user->phone,
+            $user->phone_number,
             $messageBody
         );
     }

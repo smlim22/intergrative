@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
+use App\Http\Controllers\DompdfController;
+use App\Models\Payment;
 class MailingController extends Controller
 {
     public function showForm()
@@ -19,7 +20,9 @@ class MailingController extends Controller
         ]);
 
         $to = $request->input('to');
-        $pdfPath = storage_path("app/public/invoices/gantt_New.pdf");
+        $payment = Payment::find($request->payment_id); // if you pass payment ID
+        $dompdfController = new DompdfController();
+        $pdfPath = $dompdfController->generateInvoice($payment);
 
         Mail::mailer('gmail')->send([], [], function ($message) use ($pdfPath, $to) {
             $message->to($to)

@@ -14,7 +14,8 @@ class GenerateInvoice
     public function handle(PaymentCompleted $event)
     {
     $reservation = $event->payment->reservation;
-        $user=$event->payment->user;
+        $user=$reservation->user;
+
         if($user->role->name != 'public'){
             return;
         }

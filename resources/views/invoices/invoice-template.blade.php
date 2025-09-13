@@ -39,7 +39,7 @@
         <tbody>
             <tr>
                 <td>{{ $facility }}</td>
-                 <td>{{ $reservation->reservation_date }} {{ $reservation->start_time }} - {{ $reservation->end_time }}</td>
+                 <td>{{ $reservation }}</td>
                 <td>{{ number_format($amount, 2) }}</td>
             </tr>
         </tbody>

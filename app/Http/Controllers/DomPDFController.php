@@ -13,44 +13,44 @@ use App\Models\Payment;
 class DompdfController extends Controller
 {
     /**
-     * Generate an invoice PDF and stream it to the browser.
+     * Updated to be dynamic
      */
-    public function generateInvoice(Request $request)
+    public function generateInvoice(Payment $payment)
     {
-        // Example data (later you can pass from DB or form)
+
+        $reservation = $payment->reservation; 
+        $facility = $reservation->facility;   
+        $user = $reservation->user;
+//Updated from old ver.
         $invoiceData = [
-            'invoice_no'   => 'INV-2025-001',
-            'customer'     => 'John Doe',
-            'email'        => 'johndoe@example.com',
-            'facility'     => 'Sports Hall',
-            'reservation'  => '2025-09-12 10:00 - 12:00',
-            'amount'       => 120.00,
+            'invoice_no'   => $payment->id,
+            'customer'     => $user->name,
+            'email'        => $user->email,
+            'facility'     => $facility->name,
+            'reservation'  => $reservation->reservation_date . ' ' . $reservation->start_time . ' - ' . $reservation->end_time,
+            'amount'       => $payment->amount,
         ];
 
-        // Load Blade view and inject data
+
         $pdf = Pdf::loadView('invoices.invoice-template', $invoiceData)
                   ->setPaper('a4', 'portrait');
 
-        // Save to storage (optional)
-        $fileName = "invoices/invoice_{$invoiceData['invoice_no']}.pdf";
-        $pdf->save(storage_path("app/public/{$fileName}"));
+        // Save to storage 
+        $fileName = "invoices/invoice_{$payment->id}.pdf";
+        Storage::disk('public')->put($fileName, $pdf->output());
 
-        // Stream to browser
-        return $pdf->stream("invoice_{$invoiceData['invoice_no']}.pdf");
+
+        return Storage::disk('public')->path($fileName);
     }
 public function show($id)
     {
         $payment = Payment::findOrFail($id);
+        $filePath = "invoices/invoice_{$payment->id}.pdf";
 
-        $path = "invoices/invoice_{$payment->id}.pdf";
-
-        if (!Storage::disk('public')->exists($path)) {
+        if (!Storage::disk('public')->exists($filePath)) {
             return response()->json(['error' => 'Invoice not found'], 404);
         }
 
-        $file = Storage::disk('public')->get($path);
-        $type = Storage::disk('public')->mimeType($path);
-
-        return response($file, 200)->header('Content-Type', $type);
+        return response()->file(Storage::disk('public')->path($filePath));
     }
 }
